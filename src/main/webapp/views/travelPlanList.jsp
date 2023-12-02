@@ -37,7 +37,7 @@
                         </c:when>
                         <c:otherwise>
                             <p style="text-align: left; margin-left:3vw; margin-top:0vw; width:100%;">Flight ${plan.flight.id} from ${plan.flight.departureCity} to
-                                ${plan.flight.arrivalCity} at ${plan.flight.departureTime}</p>
+                                ${plan.flight.arrivalCity}</p>
                         </c:otherwise>
                     </c:choose>
                     <button style="margin:0vw; margin-left:3vw; display:block; width:30%" name="action" value="edit">Edit your plan</button>

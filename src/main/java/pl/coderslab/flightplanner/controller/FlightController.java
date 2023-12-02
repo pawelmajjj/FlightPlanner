@@ -9,10 +9,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.flightplanner.entity.Flight;
 import pl.coderslab.flightplanner.entity.FlightDto;
-import pl.coderslab.flightplanner.entity.FlightList;
-import pl.coderslab.flightplanner.entity.User;
-import pl.coderslab.flightplanner.service.FlightService;
+import pl.coderslab.flightplanner.entity.TravelPlan;
 import pl.coderslab.flightplanner.service.FlightServiceImpl;
+import pl.coderslab.flightplanner.service.TravelPlanServiceImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,8 +20,13 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/flight")
 public class FlightController {
+
     @Autowired
     private FlightServiceImpl flightService;
+
+    @Autowired
+    private final TravelPlanServiceImpl travelPlanService;
+
     private List<String> cityNames = Arrays.asList("Athens", "Dusseldorf", "Chicago", "Sao Paulo", "Helsinki", "Vienna",
             "Berlin", "Bogota", "London Luton", "New York", "Melbourne", "Cracow", "Paris", "Lisbon", "Seoul", "Gdansk", "Oslo",
             "Rome", "Toronto", "Madrid", "Tokio", "Singapore", "Warsaw", "Barcelona", "Stockholm", "Amsterdam", "Brussels",
@@ -34,55 +38,39 @@ public class FlightController {
 
     private final Map<String, String> cities = IntStream.range(0, cityNames.size()).boxed().collect(Collectors.toMap(i -> cityNames.stream().sorted().toList().get(i), i -> cityCodes.stream().sorted().toList().get(i)));
 
-    public FlightController(FlightServiceImpl flightService) {
+    public FlightController(FlightServiceImpl flightService, TravelPlanServiceImpl travelPlanService) {
         this.flightService = flightService;
+        this.travelPlanService = travelPlanService;
     }
-/*
-    @GetMapping("/flight/list")
-    public String showFlights(Model model, HttpSession session) {
-        return "flightSummary";
-    }
-*/
+
+    /*
+        @GetMapping("/flight/list")
+        public String showFlights(Model model, HttpSession session) {
+            return "flightSummary";
+        }
+    */
     @GetMapping("/search/{planId}")
     public String findANewFlight(Model model, @PathVariable("planId") Integer planId, HttpSession session) {
         session.removeAttribute("departureCity");
         System.out.println("XDDD");
-        session.setAttribute("cityNames", cityNames);
+        model.addAttribute("cityNames", cityNames);
         model.addAttribute("flightDto", new FlightDto());
         return "flightSearch";
     }
 
     @PostMapping("/search/{planId}")
     public String findANewFlight(Model model, @PathVariable("planId") Integer planId, @Valid @ModelAttribute("flight") FlightDto flightDto, BindingResult result, HttpSession session) {
-        System.out.println(flightDto.getDepartureCity() + "DP");
-        if (flightDto.getArrivalCity() == null) {
-            session.setAttribute("departureCity", flightDto.getDepartureCity());
-            model.addAttribute("flightDto", flightDto);
-            System.out.println(flightDto.getArrivalCity() + "AP");
-            return "flightSearch";
+        if (result.hasErrors()) {
+            result.getFieldErrors();
+            return "redirect:/flight/search/".concat(planId.toString());
         }
-
-        if (flightDto.getDepartureDate() == null) {
-            session.setAttribute("arrivalCity", flightDto.getArrivalCity());
-            model.addAttribute("flightDto", flightDto);
-            System.out.println(flightDto.getArrivalCity());
-            return "flightSearch";
-        }
-
-        else {
-            System.out.println("hahaha");
-            if (result.hasErrors()) {
-                result.getFieldErrors();
-                return "redirect:/flight/search/".concat(planId.toString());
-            }
-            session.setAttribute("departureDateSession", flightDto.getArrivalCity());
-            FlightDto flight = new FlightDto(session.getAttribute("departureCity").toString(), session.getAttribute("arrivalCity").toString(), flightDto.getDepartureDate());
-        }
-        System.out.println("XDD");
+        Flight newFlight = flightService.findByData(flightDto.getDepartureCity(), flightDto.getArrivalCity(), flightDto.getDepartureDate());
+        TravelPlan tp = travelPlanService.findById(planId);
+        tp.getFlight();
+        travelPlanService.update(tp);
         return "/plan/details/".concat(planId.toString());
-        //return "flightSearch";
     }
-
+/*
     @GetMapping("/resetForm/{planId}")
     public String resetAddingForm(HttpSession session, @PathVariable("planId") Integer planId) {
         User loggedUser = (User) session.getAttribute("loggedUser");
@@ -91,5 +79,5 @@ public class FlightController {
         session.setAttribute("loggedUser", loggedUser);
         return "redirect:/plan/details/".concat(planId.toString());
     }
-
+*/
 }

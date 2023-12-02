@@ -19,9 +19,9 @@ public class Flight {
     @Id
     private String id;
     private String departureCity;
-    private String departureDate;
-    private String departureTime;
     private String arrivalCity;
+    private String departureDate;
+ //   private String departureTime;
     @OneToMany(mappedBy = "flight")
     private List<TravelPlan> travelPlans = new ArrayList<>();
 
@@ -30,10 +30,10 @@ public class Flight {
     }
 
 
-    public Flight(String departureCity, String departureDate, String departureTime, String arrivalCity) {
+    public Flight(String departureCity, String departureDate, String arrivalCity) {
         this.departureCity = departureCity;
         this.departureDate = departureDate;
-        this.departureTime = departureTime;
+   //     this.departureTime = departureTime;
         this.arrivalCity = arrivalCity;
     }
 }

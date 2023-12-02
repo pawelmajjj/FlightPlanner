@@ -15,7 +15,7 @@ import java.util.List;
 public class FlightServiceImpl implements FlightService {
 
     private static final String url = "https://pokeapi.co/api/v2/pokemon/";
- //   private List<PokeResult> data = new ArrayList<>();
+    //   private List<PokeResult> data = new ArrayList<>();
 
     @Autowired
     private FlightRepository flightRepository;
@@ -36,6 +36,15 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Flight findById(Integer id) {
         return flightRepository.findById(id).get();
+    }
+
+    public Flight findByData(String departureCity, String arrivalCity, String departureDate) {
+        Query query = entityManager
+                .createQuery("SELECT f FROM Flight f WHERE f.departureCity = :departureCity AND f.arrivalCity = :arrivalCity AND f.departureDate = :departureDate");
+        query.setParameter("departureCity", departureCity);
+        query.setParameter("arrivalCity", arrivalCity);
+        query.setParameter("departureDate", departureDate);
+        return (Flight) query.getResultList();
     }
 
     @Override
@@ -74,5 +83,5 @@ public class FlightServiceImpl implements FlightService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Exception while catching endpoint of FlightApi");
 
         }*/
-    }
+}
 

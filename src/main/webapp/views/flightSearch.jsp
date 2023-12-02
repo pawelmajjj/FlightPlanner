@@ -23,69 +23,32 @@
         <form:form method="POST" modelAttribute="flightDto" action="/flight/search/${planId}">
             <div class="formFields">
                 From:
-                <c:choose>
-                    <c:when test='${empty sessionScope.get("departureCity")}'>
-                        <form:select name="departureCity" path="departureCity" style="width:15vw; margin-left:2.7vw;">
-                            <c:forEach items='${sessionScope.get("cityNames")}' var="city">
-                                <option value="${city}">${city}</option>
-                            </c:forEach>
-                        </form:select>
-                    </c:when>
-                    <c:otherwise>
-                        <c:out value='${sessionScope.get("departureCity")}'/>
-                    </c:otherwise>
-                </c:choose>
+                <form:select name="departureCity" path="departureCity" style="width:15vw; margin-left:2.7vw;">
+                    <c:forEach items='${sessionScope.get("cityNames")}' var="city">
+                        <option value="${city}">${city}</option>
+                    </c:forEach>
+                </form:select>
             </div>
             <div class="formFields">
 
-                <c:choose>
-                    <c:when test='${empty sessionScope.get("departureCity")}'>
-                        <h5>Choose the departure city!</h5>
-                    </c:when>
-                    <c:otherwise>
-                        <br/>
-                        To:
-                        <c:if test='${empty sessionScope.get("arrivalCity")}'>
-                            <form:select id="arrivalCity" name="arrivalCity" path="arrivalCity"
-                                         style="width:15vw; margin-left:4.2vw;">
-                                <c:forEach items='${sessionScope.get("cityNames")}' var="city">
-                                    <c:if test='${city !=  sessionScope.get("departureCity")})}'>
-                                        <option value="${city}">${city}</option>
-                                    </c:if>
-                                </c:forEach>
-                            </form:select>
-                        </c:if>
-                        <c:if test='${empty sessionScope.get("departureCity")}'>
-                            <c:out value='${sessionScope.get("arrivalCity")}'/>
-                        </c:if>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-            <div class="formFields">
-            <c:choose>
-                <c:when test='${empty sessionScope.get("arrivalCity") && empty sessionScope.get("departureCity")}'>
-                    <h5>Choose the arrival city!</h5>
-                </c:when>
-                <c:otherwise>
-                    <br/>
-                    <c:if test='${!empty sessionScope.get("arrivalCity")}'>
+                <br/>
+                To:
+                <form:select id="arrivalCity" name="arrivalCity" path="arrivalCity"
+                             style="width:15vw; margin-left:4.2vw;">
+                    <c:forEach items='${sessionScope.get("cityNames")}' var="city">
+                        <option value="${city}">${city}</option>
+                    </c:forEach>
+                </form:select>
 
-                        Date:
-                        <form:input type="text" name="departureDate" path="departureDate" placeholder="DD/MM/YYYY"
-                                    style="margin-left:3vw;"/>
-                    </c:if>
-                    <c:if test='${!empty sessionScope.get("departureDate")}'>
-                        <c:out value='${sessionScope.get("departureDate")}'/>
-                    </c:if>
-                    </div>
-                    <form:errors path="departureDate" cssClass="error"/>
-                </c:otherwise>
-            </c:choose>
-            <div class="formFields">
-                <c:if test='${empty sessionScope.get("departureDate") && !empty sessionScope.get("arrivalCity")}'>
-                    <h5>Choose the departure date!</h5>
-                </c:if>
             </div>
+            <div class="formFields">
+                <br />
+                Date:
+                <form:input type="text" name="departureDate" path="departureDate" placeholder="DD/MM/YYYY"
+                            style="margin-left:3vw;"/>
+            </div>
+            <form:errors path="departureDate" cssClass="error"/>
+
             <button style="margin-left:5vw">Search</button>
 
         </form:form>
