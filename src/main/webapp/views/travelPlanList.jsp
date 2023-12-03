@@ -33,14 +33,17 @@
                         date: </b>${plan.startDate}</p>
                     <c:choose>
                         <c:when test="${null == plan.flight}">
-                            <p style="text-align: left; margin-left:3vw; margin-top:0vw; width:100%;"><i>No flight added for this plan. </i> <button style=" display:block; width:30%" name="action" value="newFlight">Add a flight</button></p>
+                            <p style="text-align: left; margin-left:3vw; margin-top:0vw; width:100%;"><i>No flight added for this plan. </i></p>
                         </c:when>
                         <c:otherwise>
-                            <p style="text-align: left; margin-left:3vw; margin-top:0vw; width:100%;">Flight ${plan.flight.id} from ${plan.flight.departureCity} to
-                                ${plan.flight.arrivalCity}</p>
+                            <p style="text-align: left; margin-left:3vw; margin-top:0vw; width:100%;">Flight <b>${plan.flight.id}</b> from <b>${plan.flight.departureCity}</b> to
+                                <b>${plan.flight.destinationCity}</b> at <b>${plan.flight.travelTime}</b>.</p>
                         </c:otherwise>
                     </c:choose>
-                    <button style="margin:0vw; margin-left:3vw; display:block; width:30%" name="action" value="edit">Edit your plan</button>
+                    <button style="margin:0vw; margin-left:3vw; display:block; width:30%" name="action">Edit your plan</button>
+                </form:form>
+                <form:form method="GET" action="/flight/search/${plan.id}">
+                    <button style="margin:0vw; margin-left:3vw; font-size:0.8vw; display:block; width:30%">Add/change a flight</button>
                 </form:form>
             </div>
         </c:forEach>

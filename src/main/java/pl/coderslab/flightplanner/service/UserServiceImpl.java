@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         return users.size() > 0 ? users.get(0) : null;
     }
 
+
     @Override
     public void delete(String email) {
         entityManager.remove(email);

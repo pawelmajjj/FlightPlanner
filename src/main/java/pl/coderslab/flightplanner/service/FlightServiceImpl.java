@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.coderslab.flightplanner.entity.Flight;
+import pl.coderslab.flightplanner.entity.User;
 import pl.coderslab.flightplanner.repository.FlightRepository;
 
 import java.util.List;
@@ -38,13 +39,36 @@ public class FlightServiceImpl implements FlightService {
         return flightRepository.findById(id).get();
     }
 
-    public Flight findByData(String departureCity, String arrivalCity, String departureDate) {
+    public Flight findFlight(String id) {
         Query query = entityManager
-                .createQuery("SELECT f FROM Flight f WHERE f.departureCity = :departureCity AND f.arrivalCity = :arrivalCity AND f.departureDate = :departureDate");
+                .createQuery("SELECT f FROM Flight f WHERE f.id = :id")
+                .setParameter("id", id);
+        List<Flight> flights = query.getResultList();
+        return flights.size() > 0 ? flights.get(0) : null;
+    }
+
+    public List<Flight> findByData(String departureCity, String destinationCity, String departureDate) {
+        Query query = entityManager
+                .createQuery("SELECT f FROM Flight f WHERE f.departureCity = :departureCity AND f.destinationCity = :destinationCity AND f.travelDate = :travelDate");
         query.setParameter("departureCity", departureCity);
-        query.setParameter("arrivalCity", arrivalCity);
+        query.setParameter("destinationCity", destinationCity);
         query.setParameter("departureDate", departureDate);
-        return (Flight) query.getResultList();
+        List<Flight> flights = query.getResultList();
+        System.out.println(flights);
+        return flights;
+    }
+
+    //String departureCity, String arrivalCity, String departureDate
+    public List<Flight> test(String departureCity, String destinationCity, String travelDate) {
+        Query query = entityManager
+                .createQuery("SELECT f FROM Flight f WHERE f.departureCity = :departureCity AND f.destinationCity = :destinationCity AND f.travelDate =:travelDate");
+        query.setParameter("departureCity", departureCity);
+        query.setParameter("destinationCity", destinationCity);
+        query.setParameter("travelDate", travelDate);
+
+        //    query.setParameter("lastName", lastName);
+        List<Flight> flights = query.getResultList();
+        return flights;
     }
 
     @Override

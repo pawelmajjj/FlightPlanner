@@ -51,25 +51,44 @@ public class FlightController {
     */
     @GetMapping("/search/{planId}")
     public String findANewFlight(Model model, @PathVariable("planId") Integer planId, HttpSession session) {
-        session.removeAttribute("departureCity");
-        System.out.println("XDDD");
-        model.addAttribute("cityNames", cityNames);
-        model.addAttribute("flightDto", new FlightDto());
+        session.setAttribute("cityNames", cityNames);
+        FlightDto flightDto = new FlightDto();
+        flightDto.setTravelDate(travelPlanService.findById(planId).getStartDate());
+        model.addAttribute("searchFlight", flightDto);
         return "flightSearch";
     }
 
     @PostMapping("/search/{planId}")
-    public String findANewFlight(Model model, @PathVariable("planId") Integer planId, @Valid @ModelAttribute("flight") FlightDto flightDto, BindingResult result, HttpSession session) {
+    public String findANewFlight(Model model, @PathVariable("planId") Integer planId, @Valid @ModelAttribute("searchFlight") FlightDto flightDto, BindingResult result, HttpSession session) {
         if (result.hasErrors()) {
             result.getFieldErrors();
             return "redirect:/flight/search/".concat(planId.toString());
         }
-        Flight newFlight = flightService.findByData(flightDto.getDepartureCity(), flightDto.getArrivalCity(), flightDto.getDepartureDate());
-        TravelPlan tp = travelPlanService.findById(planId);
-        tp.getFlight();
-        travelPlanService.update(tp);
-        return "/plan/details/".concat(planId.toString());
+        System.out.println(flightDto.getTravelDate() + " " + flightDto.getDestinationCity());
+
+        List<Flight> foundFlights = flightService.test(flightDto.getDepartureCity(), flightDto.getDestinationCity(), flightDto.getTravelDate());
+        model.addAttribute("foundFlights", foundFlights);
+        model.addAttribute("currentPlan", planId);
+        return "flightFound";
+    //    return "/search/flightsFound/".concat(planId.toString());
+//        System.out.println(newFlight.getArrivalCity() + " " + newFlight.getDepartureDate());
+    //    TravelPlan tp = travelPlanService.findById(planId);
+     //   tp.setFlight(newFlight);
+   //     travelPlanService.update(tp);
+       // return "/plan/details/".concat(planId.toString());
     }
+
+    @PostMapping("/found/{travelPlanId}/{flightId}")
+    public String addFlight(Model model, @PathVariable("travelPlanId") Integer travelPlanId, @PathVariable("flightId") String flightId) {
+        TravelPlan travelPlan = travelPlanService.findById(travelPlanId);
+        Flight flight = flightService.findFlight(flightId);
+        travelPlan.setFlight(flight);
+        travelPlanService.update(travelPlan);
+        return "redirect:/plan/details/".concat(travelPlanId.toString());
+    }
+
+
+
 /*
     @GetMapping("/resetForm/{planId}")
     public String resetAddingForm(HttpSession session, @PathVariable("planId") Integer planId) {

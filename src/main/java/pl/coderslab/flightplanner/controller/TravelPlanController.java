@@ -50,19 +50,12 @@ public class TravelPlanController {
         return "redirect:/plan/details/".concat(Integer.toString(travelPlan.getId()));
     }
 
+
     @GetMapping("/plan/details/{travelPlanId}")
-    public String showTravelDetails(Model model, @RequestParam("action") String action, @PathVariable("travelPlanId") Integer travelPlanId) {
-        if (action.equals("newFlight")) {
-            System.out.println("lol");
-            return "redirect:/flight/search/".concat(travelPlanId.toString());
-        } else {
-
-            TravelPlan travelPlan = travelPlanService.findById(travelPlanId);
-            model.addAttribute("travelPlan", travelPlan);
-            return "travelPlanDetails";
-
-        }
-
+    public String showTravelDetails(Model model, @PathVariable("travelPlanId") Integer travelPlanId) {
+        TravelPlan travelPlan = travelPlanService.findById(travelPlanId);
+        model.addAttribute("travelPlan", travelPlan);
+        return "travelPlanDetails";
     }
 
     @GetMapping("/plan/edit/{travelPlanId}")
@@ -104,5 +97,7 @@ public class TravelPlanController {
         travelPlanService.delete(travelPlanService.findById(travelPlanId));
         return "travelPlanRemoved";
     }
+
+
 
 }

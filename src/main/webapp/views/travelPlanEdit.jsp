@@ -34,7 +34,7 @@
             <button style="margin-left:7vw">Save a plan</button>
         </form:form>
         <form:form action="/plan/removed/${travelPlan.id}">
-            <button style="margin-left:7vw" name="action" value="standard">Remove this plan</button>
+            <button style="margin-left:7vw" name="action" value="remove">Remove this plan</button>
         </form:form>
     </div>
 </div>

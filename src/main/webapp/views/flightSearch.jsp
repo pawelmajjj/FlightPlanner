@@ -20,7 +20,7 @@
     </div>
     <div id="formMain" style="height:20vw; padding-top:2vw">
         <h4 style="margin:0; padding:0;">Choose two cities to find if there's a connection.</h4><br/>
-        <form:form method="POST" modelAttribute="flightDto" action="/flight/search/${planId}">
+        <form:form method="POST" modelAttribute="searchFlight" action="/flight/search/${planId}">
             <div class="formFields">
                 From:
                 <form:select name="departureCity" path="departureCity" style="width:15vw; margin-left:2.7vw;">
@@ -33,7 +33,7 @@
 
                 <br/>
                 To:
-                <form:select id="arrivalCity" name="arrivalCity" path="arrivalCity"
+                <form:select id="destinationCity" name="destinationCity" path="destinationCity"
                              style="width:15vw; margin-left:4.2vw;">
                     <c:forEach items='${sessionScope.get("cityNames")}' var="city">
                         <option value="${city}">${city}</option>
@@ -43,12 +43,11 @@
             </div>
             <div class="formFields">
                 <br />
-                Date:
-                <form:input type="text" name="departureDate" path="departureDate" placeholder="DD/MM/YYYY"
-                            style="margin-left:3vw;"/>
+                <form:input type="hidden" name="travelDate" value="${searchFlight.travelDate}" path="travelDate"/>
+                <b>Departure date:</b> ${searchFlight.travelDate}
             </div>
-            <form:errors path="departureDate" cssClass="error"/>
 
+            <form:errors path="travelTime" cssClass="error"/>
             <button style="margin-left:5vw">Search</button>
 
         </form:form>

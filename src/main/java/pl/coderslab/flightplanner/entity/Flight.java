@@ -18,10 +18,14 @@ public class Flight {
 
     @Id
     private String id;
+
     private String departureCity;
-    private String arrivalCity;
-    private String departureDate;
- //   private String departureTime;
+
+    private String destinationCity;
+
+    private String travelDate;
+    private String travelTime;
+
     @OneToMany(mappedBy = "flight")
     private List<TravelPlan> travelPlans = new ArrayList<>();
 
@@ -29,11 +33,11 @@ public class Flight {
 
     }
 
-
-    public Flight(String departureCity, String departureDate, String arrivalCity) {
+    public Flight(String departureCity, String destinationCity, String travelDate, String travelTime, List<TravelPlan> travelPlans) {
         this.departureCity = departureCity;
-        this.departureDate = departureDate;
-   //     this.departureTime = departureTime;
-        this.arrivalCity = arrivalCity;
+        this.destinationCity = destinationCity;
+        this.travelDate = travelDate;
+        this.travelTime = travelTime;
+        this.travelPlans = travelPlans;
     }
 }
